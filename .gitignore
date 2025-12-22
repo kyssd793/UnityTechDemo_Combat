@@ -1,0 +1,32 @@
+# Unity默认忽略文件（核心：只留代码和配置，删所有美术/缓存）
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
+/Logs/
+/UserSettings/
+/Packages/packages-lock.json
+/ProjectSettings/ProjectVersion.txt
+/ProjectSettings/GraphicsSettings.asset
+/ProjectSettings/QualitySettings.asset
+
+# 操作系统缓存文件
+.DS_Store
+Thumbs.db
+
+# 编辑器缓存文件
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.pdb
+*.sln.docstates
+
+# 只保留：Scripts/（代码）、Config/（配置文件）、Packages/manifest.json（包管理配置）、ProjectSettings/里的关键配置
+!/Scripts/
+!/Config/
+!/Packages/manifest.json
+!/ProjectSettings/InputManager.asset
+!/ProjectSettings/TagManager.asset
+!/ProjectSettings/LayerManager.asset
