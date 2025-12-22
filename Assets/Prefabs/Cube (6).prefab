@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3716576144561776534}
   m_Layer: 9
   m_Name: Cube (6)
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

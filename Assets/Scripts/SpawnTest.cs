@@ -1,51 +1,70 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq; // 引入列表命名空间
 
 public class SpawnTest : MonoBehaviour
 {
-    // 在Inspector中拖入Player预制体
     [SerializeField] private GameObject _playerPrefab;
-    // 在Inspector中拖入NPC预制体
     [SerializeField] private GameObject _npcPrefab;
 
-    // 箱庭边界（匹配标准化场景：X/Z ∈ [-10,10]，留1单位余量）
     [SerializeField] private float _maxX = 9f;
     [SerializeField] private float _maxZ = 9f;
     [SerializeField] private float _minY = 0.5f;
 
-    // 存储生成的物体（用于测试回收）
-    private GameObject _lastSpawnedObj;
-
+    // 用列表记录所有生成的物体和对应的预制体（键：物体，值：预制体）
+    private Dictionary<GameObject, GameObject> _spawnedObjects = new Dictionary<GameObject, GameObject>();
 
     private void Update()
     {
-        // 按P键生成Player（限制在箱庭内）
         if (Input.GetKeyDown(KeyCode.P))
         {
-            _lastSpawnedObj = SpawnObject(_playerPrefab);
+            SpawnAndRecord(_playerPrefab);
         }
 
-        // 按N键生成NPC（限制在箱庭内）
         if (Input.GetKeyDown(KeyCode.N))
         {
-            _lastSpawnedObj = SpawnObject(_npcPrefab);
+            SpawnAndRecord(_npcPrefab);
         }
 
-        // 按R键回收最后生成的物体
-        if (Input.GetKeyDown(KeyCode.R) && _lastSpawnedObj != null)
+        if (Input.GetKeyDown(KeyCode.F)) // 用F键回收
         {
-            RecycleObject(_lastSpawnedObj);
-            _lastSpawnedObj = null;
+            RecycleLastObject();
         }
     }
 
-
     /// <summary>
-    /// 封装生成物体的逻辑（限制位置在箱庭内）
+    /// 生成物体并记录到字典中
     /// </summary>
+    private void SpawnAndRecord(GameObject prefab)
+    {
+        GameObject obj = SpawnObject(prefab);
+        if (obj != null)
+        {
+            // 先移除旧的记录（如果物体已存在），再添加新记录
+            if (_spawnedObjects.ContainsKey(obj))
+            {
+                _spawnedObjects.Remove(obj);
+            }
+            _spawnedObjects.Add(obj, prefab);
+            Debug.Log($"已记录物体：{obj.name}，当前记录数量：{_spawnedObjects.Count}");
+        }
+    }
+
     private GameObject SpawnObject(GameObject prefab)
     {
+        if (prefab == null)
+        {
+            Debug.LogWarning("预制体为空，无法生成物体！");
+            return null;
+        }
+
         GameObject obj = PoolManager.Instance.Spawn(prefab);
-        // 生成位置：X∈[-_maxX, _maxX]，Y=_minY，Z∈[-_maxZ, _maxZ]
+        if (obj == null)
+        {
+            Debug.LogError($"生成物体失败！预制体{prefab.name}返回null");
+            return null;
+        }
+
         Vector3 randomPos = new Vector3(
             Random.Range(-_maxX, _maxX),
             _minY,
@@ -55,24 +74,60 @@ public class SpawnTest : MonoBehaviour
         return obj;
     }
 
-
     /// <summary>
-    /// 封装回收物体的逻辑（根据Tag匹配预制体）
+    /// 回收最后一个生成的物体
     /// </summary>
-    private void RecycleObject(GameObject obj)
+    private void RecycleLastObject()
     {
-        if (obj.CompareTag("Player"))
+        // 先清理字典中已被销毁的物体（避免空引用）
+        CleanupDestroyedObjects();
+
+        if (_spawnedObjects.Count == 0)
         {
-            PoolManager.Instance.Despawn(_playerPrefab, obj);
+            Debug.LogWarning("没有可回收的物体！");
+            return;
         }
-        else if (obj.CompareTag("NPC"))
+
+        // 取字典中最后一个物体（Linq需要引入：using System.Linq;）
+        var lastEntry = _spawnedObjects.Last();
+        GameObject lastObj = lastEntry.Key;
+        GameObject lastPrefab = lastEntry.Value;
+
+        // 执行回收
+        if (lastObj != null)
         {
-            PoolManager.Instance.Despawn(_npcPrefab, obj);
+            PoolManager.Instance.Despawn(lastPrefab, lastObj);
+            Debug.Log($"成功回收物体：{lastObj.name}");
+            // 从字典中移除该物体
+            _spawnedObjects.Remove(lastObj);
         }
         else
         {
-            Debug.LogWarning($"未知Tag的物体：{obj.name}，直接销毁");
-            Object.Destroy(obj);
+            _spawnedObjects.Remove(lastObj);
+            Debug.LogWarning("最后一个物体已销毁，自动移除记录");
+        }
+    }
+
+    /// <summary>
+    /// 清理字典中已被销毁的物体
+    /// </summary>
+    private void CleanupDestroyedObjects()
+    {
+        // 用临时列表存储要移除的物体
+        List<GameObject> toRemove = new List<GameObject>();
+        foreach (var entry in _spawnedObjects)
+        {
+            if (entry.Key == null || !entry.Key.activeInHierarchy)
+            {
+                toRemove.Add(entry.Key);
+            }
+        }
+
+        // 移除已销毁/禁用的物体
+        foreach (var obj in toRemove)
+        {
+            _spawnedObjects.Remove(obj);
+            Debug.Log($"清理已销毁/禁用的物体记录：{obj?.name}");
         }
     }
 }
