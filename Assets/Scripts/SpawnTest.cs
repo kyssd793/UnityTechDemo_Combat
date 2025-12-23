@@ -40,13 +40,22 @@ public class SpawnTest : MonoBehaviour
         GameObject obj = SpawnObject(prefab);
         if (obj != null)
         {
-            // 先移除旧的记录（如果物体已存在），再添加新记录
             if (_spawnedObjects.ContainsKey(obj))
             {
                 _spawnedObjects.Remove(obj);
             }
             _spawnedObjects.Add(obj, prefab);
-            Debug.Log($"已记录物体：{obj.name}，当前记录数量：{_spawnedObjects.Count}");
+
+            // 新增：如果是Player预制体，让摄像机跟随
+            if (prefab == _playerPrefab)
+            {
+                PlayerMovement.SetCurrentPlayer(obj);
+                // 通知摄像机跟随新Player
+                if (CameraFollow.Instance != null)
+                {
+                    CameraFollow.Instance.SetTargetPlayer(obj.transform);
+                }
+            }
         }
     }
 
@@ -79,7 +88,6 @@ public class SpawnTest : MonoBehaviour
     /// </summary>
     private void RecycleLastObject()
     {
-        // 先清理字典中已被销毁的物体（避免空引用）
         CleanupDestroyedObjects();
 
         if (_spawnedObjects.Count == 0)
@@ -88,23 +96,20 @@ public class SpawnTest : MonoBehaviour
             return;
         }
 
-        // 取字典中最后一个物体（Linq需要引入：using System.Linq;）
         var lastEntry = _spawnedObjects.Last();
         GameObject lastObj = lastEntry.Key;
         GameObject lastPrefab = lastEntry.Value;
 
-        // 执行回收
         if (lastObj != null)
         {
+            // 新增：如果回收的是Player，让摄像机复位
+            if (lastPrefab == _playerPrefab && CameraFollow.Instance != null)
+            {
+                CameraFollow.Instance.ClearTargetPlayer();
+            }
+
             PoolManager.Instance.Despawn(lastPrefab, lastObj);
-            Debug.Log($"成功回收物体：{lastObj.name}");
-            // 从字典中移除该物体
             _spawnedObjects.Remove(lastObj);
-        }
-        else
-        {
-            _spawnedObjects.Remove(lastObj);
-            Debug.LogWarning("最后一个物体已销毁，自动移除记录");
         }
     }
 

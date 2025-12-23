@@ -66,4 +66,14 @@ public class PoolManager : MonoBehaviour
             Object.Destroy(obj);
         }
     }
+
+    public Dictionary<GameObject, ObjectPool> GetPoolDict()
+    {
+        return _poolDict;
+    }
+
+    /// <summary>
+    /// 获取当前活跃的物体数量
+    /// </summary>
+
 }

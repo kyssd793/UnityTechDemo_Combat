@@ -13,6 +13,8 @@ public class ObjectPool
     // 父物体（整理场景层级）
     private Transform _parent;
 
+    private int _activeCount;
+
 
     /// <summary>
     /// 初始化对象池
@@ -21,6 +23,8 @@ public class ObjectPool
     {
         _prefab = prefab;
         _parent = parent;
+
+        _activeCount = 0;
     }
 
 
@@ -39,6 +43,7 @@ public class ObjectPool
             obj = Object.Instantiate(_prefab, _parent);
         }
         obj.SetActive(true);
+        _activeCount++;
         return obj;
     }
 
@@ -50,5 +55,20 @@ public class ObjectPool
     {
         obj.SetActive(false);
         _poolQueue.Enqueue(obj);
+        _activeCount--;
+        _activeCount=Mathf.Max(0, _activeCount);
+    }
+
+    public int GetActiveCount()
+    {
+        return _activeCount; // 需要在ObjectPool里加一个int _activeCount，Spawn时+1，Despawn时-1
+    }
+
+    /// <summary>
+    /// 获取缓存的物体数量
+    /// </summary>
+    public int GetCacheCount()
+    {
+        return _poolQueue.Count;
     }
 }
