@@ -46,7 +46,7 @@ public class SpawnTest : MonoBehaviour
             }
             _spawnedObjects.Add(obj, prefab);
 
-            // 新增：如果是Player预制体，让摄像机跟随
+            // 如果是Player预制体，让摄像机跟随
             if (prefab == _playerPrefab)
             {
                 PlayerMovement.SetCurrentPlayer(obj);
@@ -68,6 +68,8 @@ public class SpawnTest : MonoBehaviour
         }
 
         GameObject obj = PoolManager.Instance.Spawn(prefab);
+        //// 不用对象池，直接新建
+        //return Object.Instantiate(prefab);
         if (obj == null)
         {
             Debug.LogError($"生成物体失败！预制体{prefab.name}返回null");
@@ -102,13 +104,15 @@ public class SpawnTest : MonoBehaviour
 
         if (lastObj != null)
         {
-            // 新增：如果回收的是Player，让摄像机复位
+            // 如果回收的是Player，让摄像机复位
             if (lastPrefab == _playerPrefab && CameraFollow.Instance != null)
             {
                 CameraFollow.Instance.ClearTargetPlayer();
             }
 
             PoolManager.Instance.Despawn(lastPrefab, lastObj);
+            //// 不用对象池，直接销毁
+            //Object.Destroy(lastObj);
             _spawnedObjects.Remove(lastObj);
         }
     }

@@ -61,7 +61,7 @@ public class ObjectPool
 
     public int GetActiveCount()
     {
-        return _activeCount; // 需要在ObjectPool里加一个int _activeCount，Spawn时+1，Despawn时-1
+        return _activeCount; 
     }
 
     /// <summary>
