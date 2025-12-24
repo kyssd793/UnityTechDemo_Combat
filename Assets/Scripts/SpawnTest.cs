@@ -5,7 +5,7 @@ using System.Linq; // 引入列表命名空间
 public class SpawnTest : MonoBehaviour
 {
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _npcPrefab;
+    [SerializeField] public GameObject _npcPrefab;
 
     [SerializeField] private float _maxX = 9f;
     [SerializeField] private float _maxZ = 9f;
