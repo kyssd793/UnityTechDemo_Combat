@@ -3,32 +3,32 @@
   "WorkspaceRootPath": "D:\\UnityProjects\\UnityTechDemo_Combat\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\spawntest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\spawntest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|d:\\unityprojects\\unitytechdemo_combat\\assets\\scripts\\poolmonitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\poolmonitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\objectpool.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objectpool.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\playerattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\camerafollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\camerafollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|d:\\unityprojects\\unitytechdemo_combat\\assets\\scripts\\spawntest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\spawntest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\playerattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\poolmonitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\poolmonitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\objectpool.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objectpool.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
@@ -48,82 +48,85 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerAttack.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PlayerAttack.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerAttack.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAIwBIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-24T05:46:50.321Z"
+              "WhenOpened": "2025-12-24T05:46:50.321Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "PoolMonitor.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PoolMonitor.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PoolMonitor.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PoolMonitor.cs",
               "RelativeToolTip": "Assets\\Scripts\\PoolMonitor.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAzwDUAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAUwDkAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-23T08:10:18.744Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "CameraFollow.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\CameraFollow.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CameraFollow.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\CameraFollow.cs",
               "RelativeToolTip": "Assets\\Scripts\\CameraFollow.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAIwCoAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAcwB0AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T07:30:00.334Z"
+              "WhenOpened": "2025-12-23T07:30:00.334Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "PlayerMovement.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerMovement.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAwBgAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T07:09:17.727Z"
+              "WhenOpened": "2025-12-23T07:09:17.727Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "SpawnTest.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\SpawnTest.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SpawnTest.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\SpawnTest.cs",
               "RelativeToolTip": "Assets\\Scripts\\SpawnTest.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAIwFIAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAAqwKgAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-22T09:05:45.294Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "PoolManager.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PoolManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PoolManager.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PoolManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\PoolManager.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAUwDwAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAqwJEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-22T09:04:39.598Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "ObjectPool.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\ObjectPool.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ObjectPool.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\ObjectPool.cs",
               "RelativeToolTip": "Assets\\Scripts\\ObjectPool.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAADwvxgAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAkwD4AAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-22T09:04:19.266Z",
               "EditorCaption": ""

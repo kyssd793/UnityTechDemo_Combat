@@ -35,7 +35,9 @@ public class CameraFollow : MonoBehaviour
         }
         else
         {
-            ResetToInitialView(); // 无Player时保持初始位置
+            // 优化：平滑重置到初始视角（而非瞬间跳转）
+            transform.position = Vector3.Lerp(transform.position, _initialPosition, _followSmoothSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(_initialRotation), _followSmoothSpeed);
         }
     }
 

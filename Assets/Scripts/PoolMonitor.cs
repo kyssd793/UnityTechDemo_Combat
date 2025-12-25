@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using System.Text;
+using System.Linq;
 
 /// <summary>
 /// 对象池性能监控面板（技术导向）
@@ -37,22 +39,22 @@ public class PoolMonitor : MonoBehaviour
     {
         if (_monitorText == null || PoolManager.Instance == null) return;
 
-        // 替换：对象池监控 → Object Pool Monitor
-        string info = "Object Pool Monitor:\n";
-        // 获取PoolManager的对象池字典（需要给PoolManager的_poolDict加public访问权限）
-        Dictionary<GameObject, ObjectPool> poolDict = PoolManager.Instance.GetPoolDict();
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("Object Pool Monitor:");
 
+        // 关键：先将字典转为列表，避免遍历中字典被修改
+        var poolDict = PoolManager.Instance.GetPoolDict().ToList();
         foreach (var kvp in poolDict)
         {
             GameObject prefab = kvp.Key;
-            ObjectPool pool = kvp.Value;
-            // 替换：活跃 → Active，缓存 → Cached
-            info += $"{prefab.name}: Active {pool.GetActiveCount()} | Cached {pool.GetCacheCount()}\n";
-        }
+            if (prefab == null) continue; // 过滤空预制体
 
-        // 替换：GC触发次数 → GC Triggers
-        info += $"\nGC Triggers: {_gcCount}";
-        _monitorText.text = info;
+            int active = PoolManager.Instance.GetActiveCount(prefab);
+            int cache = PoolManager.Instance.GetCacheCount(prefab);
+            sb.AppendLine($"{prefab.name}: Active {active} | Cached {cache}");
+        }
+        sb.AppendLine($"\nGC Triggers: {_gcCount}");
+        _monitorText.text = sb.ToString();
     }
 
     /// <summary>

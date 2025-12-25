@@ -29,6 +29,12 @@ public class PlayerMovement : MonoBehaviour
         _currentControllablePlayer = this;
     }
 
+    // 补充：外部获取当前可操控Player（可选）
+    public static PlayerMovement GetCurrentPlayer()
+    {
+        return _currentControllablePlayer;
+    }
+
     private void FixedUpdate()
     {
         Move();

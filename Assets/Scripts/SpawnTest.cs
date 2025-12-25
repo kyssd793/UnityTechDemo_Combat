@@ -86,7 +86,34 @@ public class SpawnTest : MonoBehaviour
     }
 
     /// <summary>
-    /// 回收最后一个生成的物体
+    /// 清理字典中已被销毁的物体（彻底修复无效条目）
+    /// </summary>
+    private void CleanupDestroyedObjects()
+    {
+        // 用临时列表存储要移除的物体（包含null键）
+        List<GameObject> toRemove = new List<GameObject>();
+        foreach (var entry in _spawnedObjects)
+        {
+            // 同时检查“键是否为null”和“物体是否禁用/销毁”
+            if (entry.Key == null || !entry.Key.activeInHierarchy)
+            {
+                toRemove.Add(entry.Key);
+            }
+        }
+
+        // 移除已销毁/禁用的物体
+        foreach (var obj in toRemove)
+        {
+            if (_spawnedObjects.ContainsKey(obj))
+            {
+                _spawnedObjects.Remove(obj);
+                Debug.Log($"清理已销毁/禁用的物体记录：{obj?.name}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 回收最后一个生成的物体（增加空值判断）
     /// </summary>
     private void RecycleLastObject()
     {
@@ -98,45 +125,55 @@ public class SpawnTest : MonoBehaviour
             return;
         }
 
-        var lastEntry = _spawnedObjects.Last();
+        var validEntries = _spawnedObjects.Where(entry => entry.Key != null).ToList();
+        if (validEntries.Count == 0)
+        {
+            Debug.LogWarning("无有效物体可回收！");
+            return;
+        }
+
+        var lastEntry = validEntries.Last();
         GameObject lastObj = lastEntry.Key;
         GameObject lastPrefab = lastEntry.Value;
 
-        if (lastObj != null)
+        if (lastObj != null && lastPrefab != null)
         {
-            // 如果回收的是Player，让摄像机复位
-            if (lastPrefab == _playerPrefab && CameraFollow.Instance != null)
+            // ========== 新增：回收Player时的切换逻辑 ==========
+            if (lastPrefab == _playerPrefab)
             {
-                CameraFollow.Instance.ClearTargetPlayer();
-            }
+                // 1. 移除当前回收的Player后，查找剩余的Player
+                List<GameObject> remainingPlayers = new List<GameObject>();
+                foreach (var entry in _spawnedObjects)
+                {
+                    if (entry.Key != null && entry.Value == _playerPrefab && entry.Key != lastObj)
+                    {
+                        remainingPlayers.Add(entry.Key);
+                    }
+                }
 
+                // 2. 有剩余Player → 切换视角和控制权到最后一个剩余的Player
+                if (remainingPlayers.Count > 0)
+                {
+                    GameObject newActivePlayer = remainingPlayers.Last();
+                    // 切换摄像机跟随
+                    if (CameraFollow.Instance != null)
+                    {
+                        CameraFollow.Instance.SetTargetPlayer(newActivePlayer.transform);
+                    }
+                    // 切换操控权
+                    PlayerMovement.SetCurrentPlayer(newActivePlayer);
+                    Debug.Log($"回收Player后，切换控制权到：{newActivePlayer.name}");
+                }
+                // 3. 无剩余Player → 清空摄像机目标
+                else if (CameraFollow.Instance != null)
+                {
+                    CameraFollow.Instance.ClearTargetPlayer();
+                    CameraFollow.Instance.ResetToInitialView();
+                }
+            }
+            // ========== 原有回收逻辑 ==========
             PoolManager.Instance.Despawn(lastPrefab, lastObj);
-            //// 不用对象池，直接销毁
-            //Object.Destroy(lastObj);
             _spawnedObjects.Remove(lastObj);
-        }
-    }
-
-    /// <summary>
-    /// 清理字典中已被销毁的物体
-    /// </summary>
-    private void CleanupDestroyedObjects()
-    {
-        // 用临时列表存储要移除的物体
-        List<GameObject> toRemove = new List<GameObject>();
-        foreach (var entry in _spawnedObjects)
-        {
-            if (entry.Key == null || !entry.Key.activeInHierarchy)
-            {
-                toRemove.Add(entry.Key);
-            }
-        }
-
-        // 移除已销毁/禁用的物体
-        foreach (var obj in toRemove)
-        {
-            _spawnedObjects.Remove(obj);
-            Debug.Log($"清理已销毁/禁用的物体记录：{obj?.name}");
         }
     }
 }
