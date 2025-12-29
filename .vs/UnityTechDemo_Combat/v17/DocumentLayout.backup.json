@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\npcemptycomp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7D145C22-80E0-5D0C-F607-4268CCD191F4}|Assembly-CSharp-Editor.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\editor\\luaimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7D145C22-80E0-5D0C-F607-4268CCD191F4}|Assembly-CSharp-Editor.csproj|solutionrelative:assets\\editor\\luaimporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -21,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\camerafollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\camerafollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CADD77AF-1E24-682D-69E1-7E49E1A18A2A}|Assembly-CSharp.csproj|D:\\UnityProjects\\UnityTechDemo_Combat\\assets\\scripts\\spawntest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -54,7 +54,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "LuaImporter.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Editor\\LuaImporter.cs",
               "RelativeDocumentMoniker": "Assets\\Editor\\LuaImporter.cs",
@@ -72,14 +72,14 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\NPCEmptyComp.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\NPCEmptyComp.cs",
               "RelativeToolTip": "Assets\\Scripts\\NPCEmptyComp.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-26T08:08:52.01Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "XLuaTest01.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\XLuaTest01.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\XLuaTest01.cs",
@@ -91,7 +91,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "PlayerAttack.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PlayerAttack.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerAttack.cs",
@@ -115,7 +115,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "CameraFollow.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\CameraFollow.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CameraFollow.cs",
@@ -127,15 +127,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "PlayerMovement.cs",
               "DocumentMoniker": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
               "ToolTip": "D:\\UnityProjects\\UnityTechDemo_Combat\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerMovement.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAwBgAAABEAAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAowDQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T07:09:17.727Z"
+              "WhenOpened": "2025-12-23T07:09:17.727Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
