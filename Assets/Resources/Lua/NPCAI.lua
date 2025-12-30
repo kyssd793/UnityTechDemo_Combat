@@ -1,3 +1,4 @@
+changeDirInterval = 0.5 -- 覆盖C#传的参数
 function CalcNPCMoveDir(currentPosX, currentPosZ, currentTime, lastChangeTime, currentDirX, currentDirZ)
     local needResetChangeTime = false
 
