@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,11 @@ using XLua;
 
 public class NPCEmptyComp : MonoBehaviour
 {
+    // 血量配置
+    [Header("NPC血量配置")]
+    public int maxHp = 100;
+    private int _currentHp;
+
     private LuaEnv _luaEnv = new LuaEnv();
     private LuaFunction _luaCalcMoveDirFunc;
     private Rigidbody _rb;
@@ -24,6 +30,15 @@ public class NPCEmptyComp : MonoBehaviour
 
     private void Awake()
     {
+        // 初始化血量
+        _currentHp = maxHp;
+
+        // 注册受击事件
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.AddListener("OnTakeDamage", OnTakeDamage);
+        }
+
         // 自动找场景里的Text（名字叫"Text_for_XLua"）
         hotUpdateTipText = GameObject.Find("Text_for_XLua").GetComponent<TextMeshProUGUI>();
 
@@ -100,13 +115,24 @@ public class NPCEmptyComp : MonoBehaviour
     {
         if (_luaCalcMoveDirFunc != null)
         {
-            // 核心限制：每0.2秒才更新一次方向，避免高频抖动
+            // 新增：获取玩家位置（给玩家加"Player"标签）
+            Vector3 playerPos = Vector3.zero;
+            GameObject player = GameObject.FindWithTag("player");
+            if (player != null)
+            {
+                playerPos = player.transform.position;
+            }
+            // 计算NPC与玩家的距离
+            float distanceToPlayer = Vector3.Distance(_rb.position, playerPos);
+            // 随机移动逻辑
             if (Time.time - _lastDirUpdateTime >= _dirUpdateInterval)
             {
                 object[] luaResult = _luaCalcMoveDirFunc.Call(
                     _rb.position.x, _rb.position.z,
                     Time.time, _lastChangeTime,
-                    _currentDirX, _currentDirZ
+                    _currentDirX, _currentDirZ,
+                    playerPos.x, playerPos.z, // 玩家X/Z
+                    distanceToPlayer          // 与玩家的距离
                 );
 
                 if (luaResult != null && luaResult.Length >= 2)
@@ -136,11 +162,100 @@ public class NPCEmptyComp : MonoBehaviour
                 _lastDirUpdateTime = Time.time; // 更新方向时间戳
             }
 
-            // 移动逻辑（方向不再高频变化）
-            Vector3 targetVelocity = new Vector3(_currentDirX, 0, _currentDirZ) * moveSpeed;
+            //// 移动逻辑（方向不再高频变化）
+            //Vector3 targetVelocity = new Vector3(_currentDirX, 0, _currentDirZ) * moveSpeed;
+            //_rb.velocity = targetVelocity;
+            // 新增：追击时加速
+            float finalSpeed = moveSpeed;
+            if (distanceToPlayer < 5)
+            {
+                finalSpeed *= 1.5f;
+            }
+            Vector3 targetVelocity = new Vector3(_currentDirX, 0, _currentDirZ) * finalSpeed;
             _rb.velocity = targetVelocity;
         }
     }
+
+    /// <summary>
+    /// 受击回调
+    /// </summary>
+    private void OnTakeDamage(object argsObj)
+    {
+        Debug.Log("[NPC] 收到受击事件");
+        // 解析字典
+        Dictionary<string, object> argsDict = argsObj as Dictionary<string, object>;
+        if (argsDict == null)
+        {
+            Debug.LogError("[NPC] 受击参数不是字典");
+            return;
+        }
+
+        // 获取参数
+        if (!argsDict.TryGetValue("targetId", out object targetIdObj) ||
+            !argsDict.TryGetValue("damageValue", out object damageValueObj))
+        {
+            Debug.LogError("[NPC] 受击参数缺失");
+            return;
+        }
+        int targetId = Convert.ToInt32(targetIdObj);
+        int damageValue = Convert.ToInt32(damageValueObj);
+
+        Debug.Log($"[NPC] 受击参数：目标ID={targetId}，当前NPC ID={GetInstanceID()}");
+        if (targetId != GetInstanceID())
+        {
+            Debug.Log($"[NPC] 不是当前NPC的事件");
+            return;
+        }
+
+        _currentHp -= damageValue;
+        Debug.Log($"[NPC受击] {gameObject.name} 血量：{_currentHp}/{maxHp}");
+
+        if (_currentHp <= 0)
+        {
+            Debug.Log($"[NPC] 血量为0，准备回收");
+            RecycleSelf();
+        }
+    }
+
+    /// <summary>
+    /// 回收自身到对象池
+    /// </summary>
+    private void RecycleSelf()
+    {
+        Debug.Log($"[NPC回收] 开始回收：{gameObject.name}");
+        // 注销事件
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.RemoveListener("OnTakeDamage", OnTakeDamage);
+        }
+        if (GlobalHotUpdate.Instance != null)
+        {
+            GlobalHotUpdate.Instance.UnregisterNPC(this);
+        }
+
+        // 重置血量
+        _currentHp = maxHp;
+
+        // 回收到对象池（关键：传gameObject而非this）
+        GameObject npcPrefab = FindObjectOfType<SpawnTest>()._npcPrefab;
+        if (npcPrefab == null)
+        {
+            Debug.LogError("[NPC回收] 未找到NPC预制体");
+            return;
+        }
+        if (PoolManager.Instance == null)
+        {
+            Debug.LogError("[NPC回收] PoolManager为空");
+            return;
+        }
+
+        // 改为传gameObject（匹配非泛型Despawn方法）
+        PoolManager.Instance.Despawn(npcPrefab, gameObject);
+        Debug.Log($"[NPC回收] 成功回收到对象池：{gameObject.name}");
+    }
+
+
+
 
     private void OnDisable()
     {
@@ -156,3 +271,5 @@ public class NPCEmptyComp : MonoBehaviour
         _luaEnv.Dispose();
     }
 }
+
+

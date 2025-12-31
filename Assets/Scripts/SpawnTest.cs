@@ -138,7 +138,7 @@ public class SpawnTest : MonoBehaviour
 
         if (lastObj != null && lastPrefab != null)
         {
-            // ========== 新增：回收Player时的切换逻辑 ==========
+            // ========== 回收Player时的切换逻辑 ==========
             if (lastPrefab == _playerPrefab)
             {
                 // 1. 移除当前回收的Player后，查找剩余的Player
@@ -171,7 +171,7 @@ public class SpawnTest : MonoBehaviour
                     CameraFollow.Instance.ResetToInitialView();
                 }
             }
-            // ========== 原有回收逻辑 ==========
+            // ========== 回收逻辑 ==========
             PoolManager.Instance.Despawn(lastPrefab, lastObj);
             _spawnedObjects.Remove(lastObj);
         }
