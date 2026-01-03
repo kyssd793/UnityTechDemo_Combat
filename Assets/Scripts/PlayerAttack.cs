@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using static NPCEmptyComp;
 
-/// <summary>
-/// 极简Player攻击脚本（验证对象池回收）
-/// </summary>
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float attackRange = 2f; // 攻击范围
@@ -25,20 +22,16 @@ public class PlayerAttack : MonoBehaviour
     /// </summary>
     private void AttackNPC()
     {
-        Debug.Log("[攻击] 开始检测NPC...");
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange, npcLayer);
-        Debug.Log($"[攻击] 检测到{hitColliders.Length}个碰撞体");
 
         foreach (var collider in hitColliders)
         {
             GameObject npcObj = collider.gameObject;
-            Debug.Log($"[攻击] 检测到物体：{npcObj.name}，标签：{npcObj.tag}");
             if (npcObj.CompareTag("NPC"))
             {
                 NPCEmptyComp targetNpc = npcObj.GetComponent<NPCEmptyComp>();
                 if (targetNpc != null)
                 {
-                    Debug.Log($"[攻击] 触发受击事件：目标NPC={targetNpc.name}，ID={targetNpc.GetInstanceID()}");
                     // 用字典传参（基础类型，不会被XLua干扰）
                     Dictionary<string, object> argsDict = new Dictionary<string, object>()
                     {
@@ -46,17 +39,19 @@ public class PlayerAttack : MonoBehaviour
                         { "damageValue", damageValue },
                         { "attackTime", Time.time }
                     };
-                    EventManager.Instance.TriggerEvent("OnTakeDamage", argsDict);
-                }
-                else
-                {
-                    Debug.LogWarning($"[攻击] {npcObj.name} 没有NPCEmptyComp组件");
+                    //EventManager.Instance.TriggerEvent("OnTakeDamage", argsDict);
+                    if (NetSimulator.Instance != null)
+                    {
+                        NetSimulator.Instance.SendMessage(argsDict); // 发往模拟服务器
+                    }
+                    else
+                    {
+                        Debug.LogError("[攻击] NetSimulator未挂载！");
+                        // 降级：直接触发事件（保证原有功能可用）
+                        EventManager.Instance.TriggerEvent("OnTakeDamage", argsDict);
+                    }
                 }
             }           
-            else
-                {
-                    Debug.LogWarning($"[攻击] {npcObj.name} 不是NPC标签"); 
-                }
-            }
+        }
     }
 }

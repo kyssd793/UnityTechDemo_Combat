@@ -25,7 +25,7 @@ public class NPCEmptyComp : MonoBehaviour
     private float _currentDirX = 1;
     private float _currentDirZ = 0;
     private float _lastChangeTime;
-    private float _lastDirUpdateTime; // 新增：记录上次更新方向的时间
+    private float _lastDirUpdateTime; // 记录上次更新方向的时间
     private float _dirUpdateInterval = 3f; // 每0.2秒才更新一次方向
 
     private void Awake()
@@ -33,10 +33,18 @@ public class NPCEmptyComp : MonoBehaviour
         // 初始化血量
         _currentHp = maxHp;
 
-        // 注册受击事件
+        //// 注册受击事件
+        //if (EventManager.Instance != null)
+        //{
+        //    EventManager.Instance.AddListener("OnTakeDamage", OnTakeDamage);
+        //}
         if (EventManager.Instance != null)
         {
-            EventManager.Instance.AddListener("OnTakeDamage", OnTakeDamage);
+            // 移除原有事件（如果之前注册过）
+            EventManager.Instance.RemoveListener("OnTakeDamage", OnTakeDamage);
+            // 注册网络伤害事件
+            EventManager.Instance.AddListener("OnNetDamage", OnNetDamage);
+            Debug.Log($"[NPC] 注册网络伤害事件：{gameObject.name}");
         }
 
         // 自动找场景里的Text（名字叫"Text_for_XLua"）
@@ -71,7 +79,7 @@ public class NPCEmptyComp : MonoBehaviour
 
     public TextMeshProUGUI hotUpdateTipText; // 对应场景里的TextMeshPro文本
 
-    // 新增：热更新Lua脚本的核心方法（绑定到UI按钮）
+    // 热更新Lua脚本的核心方法（绑定到UI按钮）
     [ContextMenu("HotUpdateLua")] // 编辑器右键可测试，无需UI
     public void HotUpdateLua()
     {
@@ -115,7 +123,7 @@ public class NPCEmptyComp : MonoBehaviour
     {
         if (_luaCalcMoveDirFunc != null)
         {
-            // 新增：获取玩家位置（给玩家加"Player"标签）
+            // 获取玩家位置（给玩家加"Player"标签）
             Vector3 playerPos = Vector3.zero;
             GameObject player = GameObject.FindWithTag("player");
             if (player != null)
@@ -165,7 +173,7 @@ public class NPCEmptyComp : MonoBehaviour
             //// 移动逻辑（方向不再高频变化）
             //Vector3 targetVelocity = new Vector3(_currentDirX, 0, _currentDirZ) * moveSpeed;
             //_rb.velocity = targetVelocity;
-            // 新增：追击时加速
+            // 追击时加速
             float finalSpeed = moveSpeed;
             if (distanceToPlayer < 5)
             {
@@ -216,17 +224,62 @@ public class NPCEmptyComp : MonoBehaviour
             RecycleSelf();
         }
     }
+    /// <summary>
+    /// 处理网络同步的伤害消息（复用原有字典解析逻辑）
+    /// </summary>
+    private void OnNetDamage(object argsObj)
+    {
+        Debug.Log($"[NPC] 收到网络伤害消息：{gameObject.name}");
+        // 复用你原有能跑通的字典解析逻辑
+        Dictionary<string, object> argsDict = argsObj as Dictionary<string, object>;
+        if (argsDict == null)
+        {
+            Debug.LogError("[NPC] 网络消息不是字典");
+            return;
+        }
 
+        // 原有解析逻辑（完全复用，保证不出错）
+        if (!argsDict.TryGetValue("targetId", out object targetIdObj) ||
+            !argsDict.TryGetValue("damageValue", out object damageValueObj))
+        {
+            Debug.LogError("[NPC] 字典参数缺失");
+            return;
+        }
+        int targetId = Convert.ToInt32(targetIdObj);
+        int damageValue = Convert.ToInt32(damageValueObj);
+
+        Debug.Log($"[NPC] 解析参数：目标ID={targetId}，当前ID={GetInstanceID()}");
+        if (targetId != GetInstanceID()) return;
+
+        // 原有扣血逻辑
+        _currentHp -= damageValue;
+        Debug.Log($"[NPC受击] {gameObject.name} 血量：{_currentHp}/{maxHp}");
+
+        if (_currentHp <= 0)
+        {
+            Debug.Log($"[NPC] 血量为0，准备回收");
+            RecycleSelf();
+        }
+    }
     /// <summary>
     /// 回收自身到对象池
     /// </summary>
     private void RecycleSelf()
     {
         Debug.Log($"[NPC回收] 开始回收：{gameObject.name}");
-        // 注销事件
+        //// 注销事件
+        //if (EventManager.Instance != null)
+        //{
+        //    EventManager.Instance.RemoveListener("OnTakeDamage", OnTakeDamage);
+        //}
+        //if (GlobalHotUpdate.Instance != null)
+        //{
+        //    GlobalHotUpdate.Instance.UnregisterNPC(this);
+        //}
+        // 注销网络事件
         if (EventManager.Instance != null)
         {
-            EventManager.Instance.RemoveListener("OnTakeDamage", OnTakeDamage);
+            EventManager.Instance.RemoveListener("OnNetDamage", OnNetDamage);
         }
         if (GlobalHotUpdate.Instance != null)
         {
@@ -249,7 +302,7 @@ public class NPCEmptyComp : MonoBehaviour
             return;
         }
 
-        // 改为传gameObject（匹配非泛型Despawn方法）
+        // 传gameObject（匹配非泛型Despawn方法）
         PoolManager.Instance.Despawn(npcPrefab, gameObject);
         Debug.Log($"[NPC回收] 成功回收到对象池：{gameObject.name}");
     }
