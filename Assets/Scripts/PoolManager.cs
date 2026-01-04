@@ -10,6 +10,17 @@ public class PoolManager : MonoBehaviour
     private Dictionary<GameObject, object> _poolDict = new Dictionary<GameObject, object>();
 
     [SerializeField] private Transform _poolParent;
+    [SerializeField] private GameObject _pool;
+
+    // 内存管理+监控配置
+    [Header("对象池性能配置")]
+    public int GlobalMaxCacheCount = 100; // 全局最大缓存总数（防内存泄漏）
+    public int DefaultSingleMaxCache = 20; // 单预制体默认最大缓存数
+
+    [Header("运行时监控")]
+    public int TotalActiveCount; // 所有预制体活跃总数
+    public int TotalCacheCount; // 所有预制体缓存总数
+    public long EstimatedMemoryUsage; // 预估内存占用（字节，1个对象≈1KB）
 
 
     private void Awake()
@@ -28,7 +39,39 @@ public class PoolManager : MonoBehaviour
             _poolParent.parent = transform;
         }
     }
+    // 每帧更新监控数据
+    private void Update()
+    {
+        UpdatePoolStats();
+    }
 
+    /// <summary>
+    /// 实时更新所有对象池的统计数据
+    /// </summary>
+    private void UpdatePoolStats()
+    {
+        TotalActiveCount = 0;
+        TotalCacheCount = 0;
+
+        foreach (var kvp in _poolDict)
+        {
+            // 适配泛型ObjectPool<T>
+            if (kvp.Value is ObjectPool<MonoBehaviour> pool)
+            {
+                TotalActiveCount += pool.GetActiveCount();
+                TotalCacheCount += pool.GetCacheCount();
+            }
+        }
+
+        // 预估内存：每个缓存对象按1KB估算,精准计算需遍历组件
+        EstimatedMemoryUsage = TotalCacheCount * 1024;
+
+        // 全局缓存上限预警
+        if (TotalCacheCount > GlobalMaxCacheCount)
+        {
+            Debug.LogWarning($"[对象池预警] 全局缓存超上限({GlobalMaxCacheCount})，当前缓存数：{TotalCacheCount}");
+        }
+    }
 
     /// <summary>
     /// 获取指定预制体的对象池
@@ -174,4 +217,14 @@ public class PoolManager : MonoBehaviour
         return 0;
     }
 
+    // 获取指定预制体的复用命中率
+    public float GetHitRate(GameObject prefab)
+    {
+        if (_poolDict.TryGetValue(prefab, out var poolObj))
+        {
+            var pool = poolObj as ObjectPool<MonoBehaviour>;
+            return pool?.GetHitRate() ?? 0;
+        }
+        return 0;
+    }
 }

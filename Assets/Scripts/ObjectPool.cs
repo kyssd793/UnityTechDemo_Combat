@@ -12,18 +12,23 @@ public class ObjectPool<T> where T : MonoBehaviour
     private GameObject _prefab;
     // 父物体（整理场景层级）
     private Transform _parent;
-
     private int _activeCount;
 
+    // LRU+缓存上限+统计
+    private Dictionary<T, float> _lastUseTimeDict = new Dictionary<T, float>(); // 记录每个对象最后使用时间（LRU）
+    private int _maxCacheCount = 20; // 单预制体最大缓存数
+    public int HitCount { get; private set; } = 0; // 复用命中数（面试量化用）
+    public int MissCount { get; private set; } = 0; // 未命中数（面试量化用）
 
     /// <summary>
     /// 初始化对象池
     /// </summary>
-    public ObjectPool(GameObject prefab, Transform parent)
+    public ObjectPool(GameObject prefab, Transform parent, int maxCacheCount = 20)
     {
         _prefab = prefab;
         _parent = parent;
         _activeCount = 0;
+        _maxCacheCount = maxCacheCount;
     }
 
 
@@ -36,12 +41,15 @@ public class ObjectPool<T> where T : MonoBehaviour
         if (_poolQueue.Count > 0)
         {
             obj = _poolQueue.Dequeue();
+            _lastUseTimeDict.Remove(obj);
             obj.gameObject.SetActive(true);
+            HitCount++;
         }
         else
         {
             GameObject go= Object.Instantiate(_prefab, _parent);
             obj = go.GetComponent<T>();
+            MissCount++;
         }
         _activeCount++;
         return obj;
@@ -59,9 +67,36 @@ public class ObjectPool<T> where T : MonoBehaviour
             return;
         }
         obj.gameObject.SetActive(false);
-        _poolQueue.Enqueue(obj);
         _activeCount--;
         _activeCount=Mathf.Max(0, _activeCount);
+
+        // 缓存数超上限时，淘汰最久未使用的对象
+        if (_poolQueue.Count >= _maxCacheCount)
+        {
+            T oldestObj = null;
+            float oldestTime = float.MaxValue;
+            // 遍历找到最久未使用的对象
+            foreach (var kvp in _lastUseTimeDict)
+            {
+                if (kvp.Value < oldestTime)
+                {
+                    oldestTime = kvp.Value;
+                    oldestObj = kvp.Key;
+                }
+            }
+            // 移除并销毁最久未使用的对象
+            if (oldestObj != null)
+            {
+                var tempList = new List<T>(_poolQueue);
+                tempList.Remove(oldestObj);
+                _poolQueue = new Queue<T>(tempList);
+                _lastUseTimeDict.Remove(oldestObj);
+                Object.Destroy(oldestObj.gameObject);
+                Debug.Log($"[LRU淘汰] {_prefab.name}缓存达上限({_maxCacheCount})，销毁最久未使用对象");
+            }
+        }
+        _poolQueue.Enqueue(obj);
+        _lastUseTimeDict[obj] = Time.time; // 记录当前对象最后使用时间
     }
 
     public int GetActiveCount()
@@ -75,5 +110,10 @@ public class ObjectPool<T> where T : MonoBehaviour
     public int GetCacheCount()
     {
         return _poolQueue.Count;
+    }
+    public float GetHitRate()
+    {
+        int total = HitCount + MissCount;
+        return total == 0 ? 0 : (float)HitCount / total * 100;
     }
 }
