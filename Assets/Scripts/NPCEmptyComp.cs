@@ -33,26 +33,12 @@ public class NPCEmptyComp : MonoBehaviour
         // 初始化血量
         _currentHp = maxHp;
 
-        //// 注册受击事件
-        //if (EventManager.Instance != null)
-        //{
-        //    EventManager.Instance.AddListener("OnTakeDamage", OnTakeDamage);
-        //}
-        if (EventManager.Instance != null)
-        {
-            // 移除原有事件（如果之前注册过）
-            EventManager.Instance.RemoveListener("OnTakeDamage", OnTakeDamage);
-            // 注册网络伤害事件
-            EventManager.Instance.AddListener("OnNetDamage", OnNetDamage);
-            Debug.Log($"[NPC] 注册网络伤害事件：{gameObject.name}");
-        }
-
-        // 自动找场景里的Text（名字叫"Text_for_XLua"）
+        // 自动找场景里的Text
         hotUpdateTipText = GameObject.Find("Text_for_XLua").GetComponent<TextMeshProUGUI>();
 
         _rb = GetComponent<Rigidbody>();
         _rb.freezeRotation = true;
-        _rb.drag = 0.5f; // 直接在代码里设置阻尼，避免手动改预制体
+        _rb.drag = 0.5f;
 
         string luaPath = Application.dataPath + "/Resources/Lua/NPCAI.lua";
         if (System.IO.File.Exists(luaPath))
@@ -68,19 +54,32 @@ public class NPCEmptyComp : MonoBehaviour
         _luaEnv.Global.Set("boundaryZMin", boundaryZ.x);
         _luaEnv.Global.Set("boundaryZMax", boundaryZ.y);
     }
+
     private void OnEnable()
     {
+        // 把事件注册移到OnEnable，每次激活/复用都注册，以免复用的时候没有注册
+        if (EventManager.Instance != null)
+        {
+            // 避免重复注册
+            EventManager.Instance.RemoveListener("OnNetDamage", OnNetDamage);
+            EventManager.Instance.AddListener("OnNetDamage", OnNetDamage);
+            Debug.Log($"[NPC] 注册网络伤害事件：{gameObject.name}");
+        }
+
         // NPC激活时（从对象池取出），注册到全局管理器
         if (GlobalHotUpdate.Instance != null)
         {
             GlobalHotUpdate.Instance.RegisterNPC(this);
         }
+
+        // 激活时重置血量避免复用后血量异常
+        _currentHp = maxHp;
     }
 
     public TextMeshProUGUI hotUpdateTipText; // 对应场景里的TextMeshPro文本
 
     // 热更新Lua脚本的核心方法（绑定到UI按钮）
-    [ContextMenu("HotUpdateLua")] // 编辑器右键可测试，无需UI
+    [ContextMenu("HotUpdateLua")] // 编辑器右键测试
     public void HotUpdateLua()
     {
         try
@@ -123,7 +122,7 @@ public class NPCEmptyComp : MonoBehaviour
     {
         if (_luaCalcMoveDirFunc != null)
         {
-            // 获取玩家位置（给玩家加"Player"标签）
+            // 获取玩家位置（玩家具有player标签）
             Vector3 playerPos = Vector3.zero;
             GameObject player = GameObject.FindWithTag("player");
             if (player != null)
@@ -170,9 +169,6 @@ public class NPCEmptyComp : MonoBehaviour
                 _lastDirUpdateTime = Time.time; // 更新方向时间戳
             }
 
-            //// 移动逻辑（方向不再高频变化）
-            //Vector3 targetVelocity = new Vector3(_currentDirX, 0, _currentDirZ) * moveSpeed;
-            //_rb.velocity = targetVelocity;
             // 追击时加速
             float finalSpeed = moveSpeed;
             if (distanceToPlayer < 5)
@@ -229,8 +225,13 @@ public class NPCEmptyComp : MonoBehaviour
     /// </summary>
     private void OnNetDamage(object argsObj)
     {
+        // 非激活直接忽略
+        if (!gameObject.activeSelf)
+        {
+            Debug.LogWarning($"[NPC] 非激活状态，忽略网络伤害事件：{gameObject.name}");
+            return;
+        }
         Debug.Log($"[NPC] 收到网络伤害消息：{gameObject.name}");
-        // 复用你原有能跑通的字典解析逻辑
         Dictionary<string, object> argsDict = argsObj as Dictionary<string, object>;
         if (argsDict == null)
         {
@@ -238,7 +239,6 @@ public class NPCEmptyComp : MonoBehaviour
             return;
         }
 
-        // 原有解析逻辑（完全复用，保证不出错）
         if (!argsDict.TryGetValue("targetId", out object targetIdObj) ||
             !argsDict.TryGetValue("damageValue", out object damageValueObj))
         {
@@ -267,15 +267,6 @@ public class NPCEmptyComp : MonoBehaviour
     private void RecycleSelf()
     {
         Debug.Log($"[NPC回收] 开始回收：{gameObject.name}");
-        //// 注销事件
-        //if (EventManager.Instance != null)
-        //{
-        //    EventManager.Instance.RemoveListener("OnTakeDamage", OnTakeDamage);
-        //}
-        //if (GlobalHotUpdate.Instance != null)
-        //{
-        //    GlobalHotUpdate.Instance.UnregisterNPC(this);
-        //}
         // 注销网络事件
         if (EventManager.Instance != null)
         {
@@ -312,7 +303,11 @@ public class NPCEmptyComp : MonoBehaviour
 
     private void OnDisable()
     {
-        // NPC回收时（放回对象池），注销从全局管理器
+        // 注销事件，避免残留
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.RemoveListener("OnNetDamage", OnNetDamage);
+        }
         if (GlobalHotUpdate.Instance != null)
         {
             GlobalHotUpdate.Instance.UnregisterNPC(this);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 单机模拟网络同步管理器（兼容字典参数，无序列化依赖）
+/// 单机模拟网络同步管理器
 /// </summary>
 public class NetSimulator : MonoBehaviour
 {
@@ -36,7 +36,7 @@ public class NetSimulator : MonoBehaviour
             if (Time.time * 1000 - msg.sendTime >= simulateDelay)
             {
                 _messageQueue.Dequeue();
-                // 分发字典参数（模拟服务器广播）
+                // 分发字典参数（服务器广播）
                 DispatchMessage(msg.argsDict);
             }
             else

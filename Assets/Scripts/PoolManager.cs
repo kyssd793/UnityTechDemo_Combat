@@ -14,13 +14,13 @@ public class PoolManager : MonoBehaviour
 
     // 内存管理+监控配置
     [Header("对象池性能配置")]
-    public int GlobalMaxCacheCount = 100; // 全局最大缓存总数（防内存泄漏）
+    public int GlobalMaxCacheCount = 100; // 全局最大缓存总数
     public int DefaultSingleMaxCache = 20; // 单预制体默认最大缓存数
 
     [Header("运行时监控")]
     public int TotalActiveCount; // 所有预制体活跃总数
     public int TotalCacheCount; // 所有预制体缓存总数
-    public long EstimatedMemoryUsage; // 预估内存占用（字节，1个对象≈1KB）
+    public long EstimatedMemoryUsage; // 预估内存占用
 
 
     private void Awake()
@@ -63,7 +63,7 @@ public class PoolManager : MonoBehaviour
             }
         }
 
-        // 预估内存：每个缓存对象按1KB估算,精准计算需遍历组件
+        // 每个缓存对象按1KB估算,精准计算需遍历组件
         EstimatedMemoryUsage = TotalCacheCount * 1024;
 
         // 全局缓存上限预警
@@ -101,7 +101,7 @@ public class PoolManager : MonoBehaviour
     {
         return GetPool<T>(prefab).Get();
     }
-    // 替换PoolManager中的非泛型Spawn方法
+    // 替换非泛型Spawn方法
     public GameObject Spawn(GameObject prefab)
     {
         if (prefab == null)
@@ -121,7 +121,7 @@ public class PoolManager : MonoBehaviour
         }
         else
         {
-            // 无组件则创建临时空组件（兜底）
+            // 无组件则创建临时空组件
             Debug.LogWarning($"{prefab.name}无MonoBehaviour组件，自动添加临时组件");
             var tempComp = prefab.AddComponent<MonoBehaviour>();
             var pool = GetPool<MonoBehaviour>(prefab);
@@ -132,7 +132,7 @@ public class PoolManager : MonoBehaviour
 
 
     /// <summary>
-    /// 快捷回收物体，泛型版本
+    /// 快捷回收物体，泛型版
     /// </summary>
     public void Despawn<T>(GameObject prefab, T obj) where T : MonoBehaviour
     {
@@ -148,7 +148,7 @@ public class PoolManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// 快捷回收物体（非泛型版，兼容原有调用逻辑）
+    /// 快捷回收物体（非泛型版）
     /// </summary>
     public void Despawn(GameObject prefab, GameObject obj)
     {
@@ -194,9 +194,6 @@ public class PoolManager : MonoBehaviour
 
     /// <summary>
     /// 获取当前活跃的物体数量
-    /// </summary>
-    ///     /// <summary>
-    /// 辅助：获取指定预制体的活跃数量（监控用）
     /// </summary>
     public int GetActiveCount(GameObject prefab)
     {

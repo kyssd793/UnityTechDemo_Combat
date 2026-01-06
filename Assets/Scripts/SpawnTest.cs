@@ -68,8 +68,6 @@ public class SpawnTest : MonoBehaviour
         }
 
         GameObject obj = PoolManager.Instance.Spawn(prefab);
-        //// 不用对象池，直接新建
-        //return Object.Instantiate(prefab);
         if (obj == null)
         {
             Debug.LogError($"生成物体失败！预制体{prefab.name}返回null");

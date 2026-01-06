@@ -523,7 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01027151d7ab8b9468a0f8bbdb2b133b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulateDelay: 100
+  simulateDelay: 1000
   isDebug: 1
 --- !u!4 &543526535
 Transform:
@@ -1664,6 +1664,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poolParent: {fileID: 0}
+  _pool: {fileID: 0}
+  GlobalMaxCacheCount: 100
+  DefaultSingleMaxCache: 20
+  TotalActiveCount: 0
+  TotalCacheCount: 0
+  EstimatedMemoryUsage: 0
 --- !u!4 &2094406300
 Transform:
   m_ObjectHideFlags: 0

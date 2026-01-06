@@ -1,7 +1,7 @@
 using System;
 using UnityEngine; // 引入Unity命名空间
 
-[Serializable] // Unity内置的序列化标记
+[Serializable] 
 public class DamageArgs
 {
     public int targetId; // 目标NPC的InstanceID

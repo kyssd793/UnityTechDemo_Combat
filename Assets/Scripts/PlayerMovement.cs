@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Player的WASD移动脚本（单例控制+带速度控制+碰撞检测）
+/// Player的WASD移动脚本
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -29,11 +29,6 @@ public class PlayerMovement : MonoBehaviour
         _currentControllablePlayer = this;
     }
 
-    // 补充：外部获取当前可操控Player（可选）
-    public static PlayerMovement GetCurrentPlayer()
-    {
-        return _currentControllablePlayer;
-    }
 
     private void FixedUpdate()
     {
@@ -55,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         _rb.velocity = moveDir * _moveSpeed;
     }
 
-    // 提供外部方法：启用当前Player的操控
+    // 外部,启用当前Player的操控
     public static void SetCurrentPlayer(GameObject playerObj)
     {
         PlayerMovement movement = playerObj.GetComponent<PlayerMovement>();

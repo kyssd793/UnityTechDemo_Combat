@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    // 单例：全局唯一的摄像机脚本
+    // 全局唯一
     public static CameraFollow Instance;
 
-    // 初始俯视位置（游戏开始时的位置）
+    // 初始俯视位置
     [SerializeField] private Vector3 _initialPosition = new Vector3(0, 12, -18);
     [SerializeField] private Vector3 _initialRotation = new Vector3(35, 0, 0);
 
@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
         }
         else
         {
-            // 优化：平滑重置到初始视角（而非瞬间跳转）
+            // 平滑重置到初始视角
             transform.position = Vector3.Lerp(transform.position, _initialPosition, _followSmoothSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(_initialRotation), _followSmoothSpeed);
         }
@@ -56,13 +56,13 @@ public class CameraFollow : MonoBehaviour
         transform.rotation = Quaternion.Euler(_initialRotation);
     }
 
-    // 外部调用：设置跟随的Player
+    // 设置跟随的Player
     public void SetTargetPlayer(Transform playerTransform)
     {
         _targetPlayer = playerTransform;
     }
 
-    // 外部调用：清除跟随目标
+    // 清除跟随目标
     public void ClearTargetPlayer()
     {
         _targetPlayer = null;
